@@ -92,6 +92,10 @@ The response model is shown below:
       },
       "tables": {
         "2": "https://github.com/antosha417/test_temp/raw/master/NUP4114/NUP4114-2.csv"
+      },
+      "images": {
+        "0": "https://storage.yandexcloud.net/pdf-storage/img0_at_page0.png",
+        "1": "https://storage.yandexcloud.net/pdf-storage/img1_at_page0.png"
       }
     }
 }
