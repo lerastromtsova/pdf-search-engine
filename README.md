@@ -75,9 +75,12 @@ Finally, the resulting status code is sent to the frontend _(could be described 
 
 Receives a request from the [Search component](#search-component) that consists of a document name and certain keywords, gathers all the documents from the [Document model](#document-model) that correspond to received document name, then for each found document returns URLs of those pages that contain all of the mentioned keywords to the frontend side.
 
-Along with keywords certain operands can be used to form a search query. Those operands include:
+Advanced search is also available. Along with keywords advanced search supports such operators as:
+* OR (Default) - the service will find pages that contain one or more of the operands. Being default means that when no operators are used, the query is treated as if its operands were seperated by OR operators.
+* AND - the service will find pages that contain both of the operands.
+* NOT - the service will find pages that do not contain the stated operand.
 
-_(to be listed)_
+Example query: `((quick AND fox) OR (brown AND fox) OR fox) AND NOT news`.
 
 The response model is shown below:
 ```
@@ -106,18 +109,42 @@ pages = models.ArrayField(
 objects = models.DjongoManager()
 ```
 ### Page model
-Page entity contains information about URL of a pdf-file in [Yandex Object Storage](#yandex-object-storage) corresponding to that page, its number in a document which it is a part of, raw contained text, and its json-structured data received from [Yandex.Vision](#yandex.vision) parser.
+Page entity contains information about URL of a pdf-file in [Yandex Object Storage](#yandex-object-storage) corresponding to that page, its number in a document which it is a part of, raw contained text, its json-structured data received from [Yandex.Vision](#yandex.vision) parser, and contained tables and images.
 ```
 url = models.URLField()
 num = models.IntegerField()
 text = models.TextField()
 vision = models.TextField()
+tables = models.ArrayField(
+    model_container=Table,
+    model_form_class=TableForm
+)
+images = models.ArrayField(
+    model_container=Image,
+    model_form_class=ImageForm
+)
 ```
 ### Table model
 Table entity contains information about URL of a csv-file in [Yandex Object Storage](#yandex-object-storage) corresponding to that table, and its sequence number on a page it has been found on.
 ```
 url = models.URLField()
 num = models.IntegerField()
+```
+### Image model
+Image entity contains information about URL of a png-file in [Yandex Object Storage](#yandex-object-storage) corresponding to that image, and its sequence number on a page it has been found on.
+```
+url = models.URLField()
+num = models.IntegerField()
+```
+### ElasticPage model
+ElasticPage entity contains information about its given name, URL of a pdf-file in [Yandex Object Storage](#yandex-object-storage) corresponding to that page, its number in a document which it is a part of, raw contained text, and the name of a document which it is a part of.
+```
+name = models.CharField(max_length=210, primary_key=True)
+url = models.URLField()
+num = models.IntegerField()
+text = models.TextField()
+doc\_name = models.CharField(max\_length=200)
+document = models.ForeignKey(Document, on_delete=models.CASCADE)
 ```
 ## Databases
 ### MongoDB
