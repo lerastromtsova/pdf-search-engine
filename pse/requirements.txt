@@ -25,7 +25,7 @@ ipython-genutils==0.2.0
 jdcal==1.4.1
 jedi==0.17.0
 jmespath==0.9.5
-numpy==1.18.4
+numpy==1.22.0
 openpyxl==3.0.3
 pandas==1.0.3
 parso==0.7.0
